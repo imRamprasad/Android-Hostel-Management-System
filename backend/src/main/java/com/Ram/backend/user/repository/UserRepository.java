@@ -6,5 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // Standard CRUD methods are built-in
+    java.util.Optional<User> findByEmail(String email);
+    java.util.Optional<User> findByPhoneNumber(String phoneNumber);
+    boolean existsByEmail(String email);
+    boolean existsByPhoneNumber(String phoneNumber);
 }

@@ -11,17 +11,22 @@ PG/Hostel Room Allocation & Complaint Management System — Spring Boot +
 MySQL backend, Android (Kotlin/Compose) resident app. Built in 2-week Agile
 sprints. See `context/project-overview.md` for the full picture.
 
+**Stack Details:**
+- **Backend**: Spring Boot 3, Spring Security, JWT (jjwt), Firebase Admin SDK (OTP/Social), Hibernate/JPA.
+- **Android**: Kotlin, Jetpack Compose, Navigation Compose, Firebase Auth, Google Sign-In SDK, Retrofit.
+- **Database**: MariaDB (MySQL compatible).
+
 ## Read order (every new session)
 
 1. `context/agile/sprint-log.md` — what's done, in progress, next, blockers
 2. `context/agile/sprint-plan.md` — current and upcoming sprint scope
-3. `context/agile/product-backlog.md` — full epics/stories with acceptance criteria
-4. `context/architecture.md` — stack, folder structure, module boundaries
+3. `docs/specs/` — technical build specs for approved features (read before building)
+4. `context/agile/product-backlog.md` — full epics/stories with acceptance criteria
 5. `context/database-schema.md` — tables, relationships (source of truth)
 6. `context/api-contracts.md` — endpoint contracts (source of truth — never invent endpoints)
-7. `context/code-standards.md` + `context/agile/definition-of-done.md` — conventions and the Non-Destructive Change Rule
-8. `context/library-docs.md` — JWT, FCM, Google Sign-In, PDF generation patterns
-9. `context/mobile-ui-registry.md` + `context/agile/design-sourcing.md` — (Android) existing components and design system
+7. `context/mobile-ui-registry.md` — Android design tokens and components
+8. `context/code-standards.md` + `context/agile/definition-of-done.md` — conventions and the Non-Destructive Change Rule
+9. `context/library-docs.md` — JWT, Firebase Admin, FCM, Google Sign-In patterns
 
 ## Skills installed
 

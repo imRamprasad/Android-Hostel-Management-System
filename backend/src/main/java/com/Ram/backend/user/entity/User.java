@@ -21,14 +21,19 @@ public class User {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false)
     private String password;
+
+    @Column(name = "google_id", unique = true)
+    private String googleId;
+
+    @Column(nullable = false)
+    private Role role;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
@@ -39,12 +44,14 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String fullName, String email, String phoneNumber, String password, Boolean isActive, LocalDateTime createdAt) {
+    public User(Long id, String fullName, String email, String phoneNumber, String password, String googleId, Role role, Boolean isActive, LocalDateTime createdAt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.googleId = googleId;
+        this.role = role;
         this.isActive = isActive;
         this.createdAt = createdAt;
     }
@@ -93,6 +100,22 @@ public class User {
         this.password = password;
     }
 
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public Boolean getIsActive() {
         return isActive;
     }
@@ -115,6 +138,9 @@ public class User {
         if (this.isActive == null) {
             this.isActive = true; // Default new users to active
         }
+        if (this.role == null) {
+            this.role = Role.RESIDENT; // Default to RESIDENT
+        }
     }
 
     public static final class UserBuilder {
@@ -123,6 +149,8 @@ public class User {
         private String email;
         private String phoneNumber;
         private String password;
+        private String googleId;
+        private Role role;
         private Boolean isActive;
         private LocalDateTime createdAt;
 
@@ -154,6 +182,16 @@ public class User {
             return this;
         }
 
+        public UserBuilder googleId(String googleId) {
+            this.googleId = googleId;
+            return this;
+        }
+
+        public UserBuilder role(Role role) {
+            this.role = role;
+            return this;
+        }
+
         public UserBuilder isActive(Boolean isActive) {
             this.isActive = isActive;
             return this;
@@ -165,7 +203,7 @@ public class User {
         }
 
         public User build() {
-            return new User(id, fullName, email, phoneNumber, password, isActive, createdAt);
+            return new User(id, fullName, email, phoneNumber, password, googleId, role, isActive, createdAt);
         }
     }
 }

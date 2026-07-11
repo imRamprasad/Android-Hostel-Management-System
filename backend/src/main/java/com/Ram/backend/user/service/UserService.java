@@ -3,8 +3,10 @@ package com.Ram.backend.user.service;
 import com.Ram.backend.common.exception.ResourceNotFoundException;
 import com.Ram.backend.user.dto.CreateUserRequest;
 import com.Ram.backend.user.dto.UserResponse;
+import com.Ram.backend.user.entity.Role;
 import com.Ram.backend.user.entity.User;
 import com.Ram.backend.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserResponse createUser(CreateUserRequest request) {
@@ -25,7 +29,8 @@ public class UserService {
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
-                .password(request.getPassword()) // Note: Encryption will be added on security days!
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.RESIDENT) // Default to resident via this API too
                 .build();
 
         // 2. Save to MySQL via Repository
@@ -49,6 +54,12 @@ public class UserService {
 
     // Helper method to keep code DRY (Don't Repeat Yourself)
     private UserResponse mapToResponse(User user) {
-        return new UserResponse(user.getId(), user.getFullName(), user.getEmail(), user.getPhoneNumber());
+        return new UserResponse(
+                user.getId(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getRole() != null ? user.getRole().name() : null
+        );
     }
 }

@@ -23,12 +23,12 @@ this first (along with `sprint-plan.md`) to know exactly where the project stand
 - **Retro:** Found and fixed MySQL port conflict (3305 vs 3306) and dialect mismatch. Backend successfully connected to XAMPP MariaDB. Android build verified. Ready for Sprint 1.
 
 ### Sprint 1 — Auth
-- [ ] AUTH-1
-- [ ] AUTH-2
-- [ ] AUTH-3
-- [ ] AUTH-4
-- [ ] AND-2 (nav shell + Google Sign-In wired)
-- **Retro:**
+- [x] AUTH-1 (Email/Password registration)
+- [x] AUTH-2 (Google Sign-In backend support)
+- [x] AUTH-3 (JWT & Refresh tokens)
+- [x] AUTH-4 (Admin role in DB)
+- [x] AND-2 (Navigation shell + Auth screens)
+- **Retro:** Implemented hybrid identity (Email, Phone/OTP, Google). Integrated Firebase Admin SDK for backend verification and jjwt for session management. Android app now gates Dashboard with a Login screen.
 
 ### Sprint 2 — Room Management + Resident Profile
 - [ ] ROOM-1 / ROOM-2 / ROOM-3 / ROOM-4

@@ -7,12 +7,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.neatroots.android.ui.theme.AndroidTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.neatroots.android.data.remote.RetrofitProvider
+import com.neatroots.android.data.repository.AuthRepository
 import com.neatroots.android.data.repository.DashboardRepository
+import com.neatroots.android.ui.auth.AuthViewModel
+import com.neatroots.android.ui.auth.AuthViewModelFactory
+import com.neatroots.android.ui.auth.LoginRoute
 import com.neatroots.android.ui.dashboard.DashboardRoute
 import com.neatroots.android.ui.dashboard.DashboardViewModel
 import com.neatroots.android.ui.dashboard.DashboardViewModelFactory
+import com.neatroots.android.ui.theme.AndroidTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,16 +27,37 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndroidTheme {
-                val repository = DashboardRepository(RetrofitProvider.api)
-                val dashboardViewModel: DashboardViewModel = viewModel(
-                    factory = DashboardViewModelFactory(repository)
-                )
+                val navController = rememberNavController()
+                
+                // Repositories
+                val authRepository = AuthRepository(RetrofitProvider.api)
+                val dashboardRepository = DashboardRepository(RetrofitProvider.api)
 
                 Scaffold { innerPadding ->
-                    androidx.compose.foundation.layout.Box(
+                    NavHost(
+                        navController = navController,
+                        startDestination = "login",
                         modifier = androidx.compose.ui.Modifier.padding(innerPadding)
                     ) {
-                        DashboardRoute(viewModel = dashboardViewModel)
+                        composable("login") {
+                            val authViewModel: AuthViewModel = viewModel(
+                                factory = AuthViewModelFactory(authRepository)
+                            )
+                            LoginRoute(
+                                viewModel = authViewModel,
+                                onLoginSuccess = {
+                                    navController.navigate("dashboard") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                        composable("dashboard") {
+                            val dashboardViewModel: DashboardViewModel = viewModel(
+                                factory = DashboardViewModelFactory(dashboardRepository)
+                            )
+                            DashboardRoute(viewModel = dashboardViewModel)
+                        }
                     }
                 }
             }

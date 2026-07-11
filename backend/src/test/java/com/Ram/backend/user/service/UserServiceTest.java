@@ -3,6 +3,7 @@ package com.Ram.backend.user.service;
 import com.Ram.backend.common.exception.ResourceNotFoundException;
 import com.Ram.backend.user.dto.CreateUserRequest;
 import com.Ram.backend.user.dto.UserResponse;
+import com.Ram.backend.user.entity.Role;
 import com.Ram.backend.user.entity.User;
 import com.Ram.backend.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -10,12 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +27,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -41,9 +47,11 @@ class UserServiceTest {
                 .fullName("Aarav Sharma")
                 .email("aarav@example.com")
                 .phoneNumber("9999999999")
-                .password("secret123")
+                .password("encodedSecret123")
+                .role(Role.RESIDENT)
                 .build();
 
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedSecret123");
         when(userRepository.save(org.mockito.ArgumentMatchers.any(User.class))).thenReturn(savedUser);
 
         UserResponse response = userService.createUser(request);
@@ -52,6 +60,7 @@ class UserServiceTest {
         assertEquals("Aarav Sharma", response.getFullName());
         assertEquals("aarav@example.com", response.getEmail());
         assertEquals("9999999999", response.getPhoneNumber());
+        assertEquals("RESIDENT", response.getRole());
         verify(userRepository).save(org.mockito.ArgumentMatchers.any(User.class));
     }
 
@@ -63,6 +72,7 @@ class UserServiceTest {
                 .email("one@example.com")
                 .phoneNumber("8888888888")
                 .password("secret")
+                .role(Role.RESIDENT)
                 .build();
 
         when(userRepository.findAll()).thenReturn(List.of(user));
